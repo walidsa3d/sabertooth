@@ -1,4 +1,14 @@
-import os, struct, xmlrpclib, commands, gzip, traceback, logging, requests,shutil
+#!/usr/bin/env python
+#walid.saad
+import os
+import struct
+import xmlrpclib
+import commands
+import gzip
+import traceback
+import logging
+import requests
+import shutil
 import argparse
 from painter import paint
 
@@ -28,11 +38,7 @@ class opensubs:
             os.remove(srtbasefilename+".srt.gz")
             return srtbasefilename+".srt"
 
-    def query(self,filename, maxnumber, imdbID=None, moviehash=None, bytesize=None, langs=None):
-            ''' Makes a query on opensubtitles and returns info about found subtitles.
-                Note: if using moviehash, bytesize is required.    '''
-            log = logging.getLogger(__name__)
-            log.debug('query')
+    def query(self,filename, maxnumber, lang,imdbID=None, moviehash=None, bytesize=None):
             #Prepare the search
             search = {}
             sublinks = []
@@ -42,24 +48,17 @@ class opensubs:
             #search['SubLanguageID']="eng,fra,dan"
             # if langs: search['sublanguageid'] = ",".join([self.getLanguage(lang) for lang in langs])
             if len(search) == 0:
-                log.debug("No search term, we'll use the filename")
-                # Let's try to guess what to search:
-                search['query'] = filename
-                log.debug(search['query'])
-                
+                search['query'] = filename              
             #Login
             server = xmlrpclib.Server('http://api.opensubtitles.org/xml-rpc')
             log_result = server.LogIn("","","eng","periscope")
             print log_result
-            log.debug(log_result)
             token = log_result["token"]  
             print token  
             results = server.SearchSubtitles(token, [search])
             sublinks = []
             if results['data']:
-                log.debug(results['data'])
                 for r in results['data']:
-                    # Only added if the MovieReleaseName matches the file
                     result = {}
                     result["release"] = r['SubFileName']
                     result["link"] = r['SubDownloadLink']
@@ -67,23 +66,25 @@ class opensubs:
                     result["movie"]=r['MovieReleaseName']
                     result["date"]=r['SubAddDate']
                     sublinks.append(result)
-            return [x for x in sublinks if x["lang"]=="eng"][:maxnumber]        
-             # Search
+            lang=OS_LANGS[lang] if lang in OS_LANGS else "eng"
+            return [x for x in sublinks if x["lang"]==lang][:maxnumber]        
             try:
                 server.LogOut(token)
             except:
-                log.error("Open subtitles could not be contacted for logout")
+                print "Open subtitles could not be contacted for logout"
     def main(self):
         parser = argparse.ArgumentParser(usage="-h for full usage")
-        parser.add_argument('query', nargs='*',help='source directory')
+        parser.add_argument('query',help='source directory',nargs='+')
+        parser.add_argument('-n', dest="maxnumber", help="update database",type=int)
+        parser.add_argument('-lang', dest="language", help="update database")
         args = parser.parse_args()
-        results=opensubs().query("".join(args.query),10)
+        results=opensubs().query(" ".join(args.query),args.maxnumber,args.language)
         results=dict(enumerate(results))
         for i in results:
             index=paint.red(i)
             release=paint.green(results[i]["movie"])
             print index,") "+release
-        choice=raw_input("Choose subtitle to download \n")
+        choice=raw_input("Choose subtitle to download : \t")
         self.download_subtitle(results[int(choice)])
     
 if __name__ == '__main__':
