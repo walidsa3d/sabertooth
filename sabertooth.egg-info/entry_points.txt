@@ -1,3 +1,0 @@
-[console_scripts]
-sabertooth = sabertooth.sabertooth:__main__
-

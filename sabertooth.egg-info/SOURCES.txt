@@ -1,9 +1,0 @@
-setup.py
-sabertooth/__init__.py
-sabertooth/sabertooth.py
-sabertooth.egg-info/PKG-INFO
-sabertooth.egg-info/SOURCES.txt
-sabertooth.egg-info/dependency_links.txt
-sabertooth.egg-info/entry_points.txt
-sabertooth.egg-info/pbr.json
-sabertooth.egg-info/top_level.txt
