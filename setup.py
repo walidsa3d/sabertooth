@@ -6,7 +6,7 @@ data_files = [
 
 setup(
     name='sabertooth',
-    version='1.0',
+    version='0.1',
     description="An OpenSubtitles Client",
     long_description=open('README.md').read(),
     author='Walid Saad',
