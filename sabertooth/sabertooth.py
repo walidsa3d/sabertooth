@@ -1,22 +1,16 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# walid.saad
-import argparse
 import commands
 import gzip
 import logging
 import os
 import shutil
 import struct
-import sys
 import traceback
 import xmlrpclib
 
 import requests
 
 import langs
-from dateutil.parser import parse
-from termcolor import colored
 
 
 class opensubs(object):
@@ -73,31 +67,3 @@ class opensubs(object):
             server.LogOut(token)
         except:
             print "Open subtitles could not be contacted for logout"
-
-    def main(self):
-        parser = argparse.ArgumentParser(usage="-h for full usage")
-        parser.add_argument('query', help='source directory', nargs='+')
-        parser.add_argument(
-            '-n', dest="maxnumber", help="update database", type=int)
-        parser.add_argument('-lang', dest="language", help="update database")
-        args = parser.parse_args()
-        results = opensubs().query(
-            " ".join(args.query), args.maxnumber, args.language)
-        results = dict(enumerate(results))
-        for i in results:
-            index = colored(i, 'red')
-            lang = colored(results[i]['lang'], 'yellow', 'on_grey')
-            dt = parse(results[i]['date'])
-            date = colored(dt.strftime('%d/%m/%Y'), 'blue')
-            release = colored(results[i]["movie"].encode('utf-8'), 'green')
-            output = "{} {} {} {}".format(index, lang, release, date)
-            print output
-        choice = raw_input("Choose subtitle to download : \t")
-        self.download_subtitle(results[int(choice)])
-
-if __name__ == '__main__':
-    try:
-        opensubs().main()
-    except KeyboardInterrupt:
-        print "Exiting"
-        sys.exit(0)

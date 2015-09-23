@@ -1,23 +1,59 @@
+#### joe made this: http://goel.io/joe
 
-     _
-    (_)   _      __
-    | | /'_`\  /'__`\
-    | |( (_) )(  ___/
- _  | |`\___/'`\____)
-( )_| |
-`\___/'
+#####=== Python ===#####
 
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
 
-joe generates .gitignore files from the command line for you
+# C extensions
+*.so
 
-Usage:
-  joe (ls | list)
-  joe [NAME...]
-  joe (-h | --help)
-  joe --version
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
 
-Options:
-  -h --help     Show this screen.
-  --version     Show version.
+# PyInstaller
+#  Usually these files are written by a python script from a template
+#  before PyInstaller builds the exe, so as to inject date/other infos into it.
+*.manifest
+*.spec
 
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.cache
+nosetests.xml
+coverage.xml
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+target/
 
