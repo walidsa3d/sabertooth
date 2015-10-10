@@ -3,7 +3,7 @@ from setuptools import setup
 
 setup(
     name='sabertooth',
-    version='0.2.0',
+    version='0.3.0',
     description="An OpenSubtitles Client",
     long_description=open('README.md').read(),
     author='Walid Saad',

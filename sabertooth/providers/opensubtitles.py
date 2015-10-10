@@ -4,9 +4,9 @@ import os
 import shutil
 import xmlrpclib
 
-import requests
-
+import babelfish
 import langs
+import requests
 
 
 class opensubtitles(object):
@@ -63,7 +63,7 @@ class opensubtitles(object):
             server.LogOut(token)
         except:
             print "Logout Error"
-        lang = langs.OS_LANGS[lang] if lang in langs.OS_LANGS else "eng"
+        lang = babelfish.Language.fromalpha2(lang).opensubtitles
         results = [x for x in subtitles if x["lang"] == lang][:maxnumber]
         return results
       

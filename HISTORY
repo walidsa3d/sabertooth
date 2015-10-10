@@ -1,0 +1,34 @@
+Changelog
+=========
+
+%%version%% (unreleased)
+------------------------
+
+- Better exception handling. [walid]
+
+0.2.0 (2015-09-23)
+------------------
+
+- Fix setup.cfg. [walid]
+
+- Prettify output, add project files. [walid]
+
+  use prettytable instead of string formatting
+  add AUTHORS, HISTORY files
+  add new cli.py file
+
+- Some fixes. [walid]
+
+- -m. [walid]
+
+- Chore: add LICENSE, MANIFEST.in. [walid]
+
+- Some fixes. [walid]
+
+- Better output. [walid]
+
+- Some fixes. [walid]
+
+- Choose and download subtitle. [walid]
+
+
