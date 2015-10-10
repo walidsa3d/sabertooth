@@ -1,6 +1,16 @@
 Changelog
 =========
 
+%%version%% (unreleased)
+------------------------
+
+- Update readme, fix setup.py. [walid]
+
+0.3.1 (2015-10-10)
+------------------
+
+- Fix formatting, remove custom langs file. [walid]
+
 0.3.0 (2015-10-10)
 ------------------
 

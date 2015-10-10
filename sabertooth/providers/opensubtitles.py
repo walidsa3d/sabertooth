@@ -5,7 +5,6 @@ import shutil
 import xmlrpclib
 
 import babelfish
-import langs
 import requests
 
 
