@@ -4,6 +4,7 @@ from providers import opensubtitles
 
 opensubtitles = opensubtitles()
 
+
 def search(queryString, lang, maxnumber, provider):
     if provider == "opensubtitles":
         return opensubtitles.query(queryString, maxnumber, "en")
