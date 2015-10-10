@@ -1,12 +1,13 @@
 #Sabertooth
 An OpenSubtitles Client
 
-#Installation (automatic)
+#Install (automatic)
 ```
+$ pip install sabertooth
 ```
-#Installation (manual)
+#Install (manual)
 ```
-$ git clone
+$ git clone git@github.com:walidsa3d/sabertooth.git
 $ cd sabertooth
 $ python setup.py install
 ```
@@ -15,6 +16,7 @@ $ python setup.py install
 $ sabertooth <query> -n <number_of_results> -l <language>
 ```
 #License
+```
 The MIT License (MIT)
 
 Copyright (c) 2015 Walid Saad
@@ -36,3 +38,4 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+```
