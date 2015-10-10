@@ -5,9 +5,10 @@ import sys
 
 import argparse
 
+import subapi
+
 from dateutil.parser import parse
 from prettytable import PrettyTable
-from sabertooth import opensubs
 from termcolor import colored
 
 
@@ -39,12 +40,16 @@ def pretty_print(data):
 def main():
     try:
         args = args_parse()
-        results = opensubs().query(
-            " ".join(args.query), args.maxnumber, args.language)
+        query = " ".join(args.query)
+        results = subapi.search(query, args.language, args.maxnumber, 
+            "opensubtitles")
         data = dict(enumerate(results))
         pretty_print(data)
         choice = raw_input("Choose subtitle to download : \t")
-        opensubs().download_subtitle(data[int(choice)])
+        subapi().download_subtitle(data[int(choice)])
     except KeyboardInterrupt:
         print "Exiting"
         sys.exit(0)
+
+if __name__ == '__main__':
+    main()

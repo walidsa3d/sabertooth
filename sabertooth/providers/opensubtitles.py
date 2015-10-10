@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
-import commands
 import gzip
-import logging
 import os
 import shutil
-import struct
-import traceback
 import xmlrpclib
 
 import requests
@@ -13,17 +9,18 @@ import requests
 import langs
 
 
-class opensubs(object):
+class opensubtitles(object):
 
     def __init__(self):
-        pass
+        self.api_url = 'http://api.opensubtitles.org/xml-rpc'
 
     def download_subtitle(self, subtitle):
         suburl = subtitle["link"]
         videofilename = subtitle["release"]
         srtbasefilename = videofilename.rsplit(".", 1)[0]
         response = requests.get(suburl, stream=True)
-        with open(srtbasefilename+".srt.gz", 'wb') as out_file:
+        zip_filename = srtbasefilename+".srt.gz"
+        with open(zip_filename, 'wb') as out_file:
             shutil.copyfileobj(response.raw, out_file)
         del response
         f = gzip.open(srtbasefilename+".srt.gz")
@@ -35,9 +32,8 @@ class opensubs(object):
         return srtbasefilename+".srt"
 
     def query(self, filename, maxnumber, lang, imdbID=None, moviehash=None, bytesize=None):
-        # Prepare the search
         search = {}
-        sublinks = []
+        subtitles = []
         if moviehash:
             search['moviehash'] = moviehash
         if imdbID:
@@ -46,24 +42,28 @@ class opensubs(object):
             search['moviebytesize'] = str(bytesize)
         if len(search) == 0:
             search['query'] = filename
-        # Login
-        server = xmlrpclib.Server('http://api.opensubtitles.org/xml-rpc')
-        login_result = server.LogIn("", "", "eng", "periscope")
-        token = login_result["token"]
+        server = xmlrpclib.Server(self.api_url)
+        try:
+            login_result = server.LogIn("", "", "eng", "periscope")
+            token = login_result["token"]
+        except Exception:
+            print "Login Error"
+            return subtitles
         results = server.SearchSubtitles(token, [search])
-        sublinks = []
         if results['data']:
             for r in results['data']:
-                result = {}
-                result["release"] = r['SubFileName']
-                result["link"] = r['SubDownloadLink']
-                result["lang"] = r['SubLanguageID']
-                result["movie"] = r['MovieReleaseName']
-                result["date"] = r['SubAddDate']
-                sublinks.append(result)
-        lang = langs.OS_LANGS[lang] if lang in langs.OS_LANGS else "eng"
-        return [x for x in sublinks if x["lang"] == lang][:maxnumber]
+                subtitle = {}
+                subtitle["release"] = r['SubFileName']
+                subtitle["link"] = r['SubDownloadLink']
+                subtitle["lang"] = r['SubLanguageID']
+                subtitle["movie"] = r['MovieReleaseName']
+                subtitle["date"] = r['SubAddDate']
+                subtitles.append(subtitle)
         try:
             server.LogOut(token)
         except:
-            print "Open subtitles could not be contacted for logout"
+            print "Logout Error"
+        lang = langs.OS_LANGS[lang] if lang in langs.OS_LANGS else "eng"
+        results = [x for x in subtitles if x["lang"] == lang][:maxnumber]
+        return results
+      

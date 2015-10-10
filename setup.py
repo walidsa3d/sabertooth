@@ -18,7 +18,7 @@ setup(
         'Development Status :: 4  - Beta',
         'Environment :: Console',
         'Intended Audience :: End Users/Desktop',
-        'License :: OSI Approved :: MIT',
+        'License :: OSI Approved :: MIT LICENSE',
         'Operating System :: OS Independent',
         'Natural Language :: English',
         'Operating System :: OS Independent',
