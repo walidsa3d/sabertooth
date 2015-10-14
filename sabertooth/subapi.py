@@ -1,15 +1,21 @@
 # -*- coding: utf-8 -*-
 
-from providers import opensubtitles
+from providers import Opensubtitles
+from providers import Subscene
 
-opensubtitles = opensubtitles()
-
-
-def search(queryString, lang, maxnumber, provider):
-    if provider == "opensubtitles":
-        return opensubtitles.query(queryString, maxnumber, "en")
+sites = {'opensubtitles': Opensubtitles,
+         'subscene': Subscene}
 
 
-def download_subtitle(url, provider):
-    if provider == "opensubtitles":
-        opensubtitles.download_subtitle(url)
+def search(provider, queryString, lang='en', maxnumber=10):
+    if provider in sites:
+        return sites[provider]().search(queryString, maxnumber, lang)
+    else:
+        raise ValueError('Provider Not Supported')
+
+
+def download(provider, url):
+    if provider in sites:
+        return sites[provider]().download(url)
+    else:
+        raise ValueError('Provider Not Supported')

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+
 import gzip
 import os
 import shutil
@@ -8,12 +9,12 @@ import babelfish
 import requests
 
 
-class opensubtitles(object):
+class Opensubtitles(object):
 
     def __init__(self):
         self.api_url = 'http://api.opensubtitles.org/xml-rpc'
 
-    def download_subtitle(self, subtitle):
+    def download(self, subtitle):
         suburl = subtitle["link"]
         videofilename = subtitle["release"]
         srtbasefilename = videofilename.rsplit(".", 1)[0]
@@ -30,7 +31,7 @@ class opensubtitles(object):
         os.remove(srtbasefilename+".srt.gz")
         return srtbasefilename+".srt"
 
-    def query(self, filename, maxnumber, lang, imdbID=None, moviehash=None, bytesize=None):
+    def _query(self, filename, maxnumber, lang, imdbID=None, moviehash=None, bytesize=None):
         search = {}
         subtitles = []
         if moviehash:
@@ -44,25 +45,29 @@ class opensubtitles(object):
         server = xmlrpclib.Server(self.api_url)
         try:
             login_result = server.LogIn("", "", "eng", "periscope")
-            token = login_result["token"]
+            token = login_result['token']
         except Exception:
-            print "Login Error"
+            print 'Login Error'
             return subtitles
         results = server.SearchSubtitles(token, [search])
         if results['data']:
             for r in results['data']:
                 subtitle = {}
-                subtitle["release"] = r['SubFileName']
-                subtitle["link"] = r['SubDownloadLink']
-                subtitle["lang"] = r['SubLanguageID']
-                subtitle["movie"] = r['MovieReleaseName']
-                subtitle["date"] = r['SubAddDate']
+                subtitle['release'] = r['SubFileName']
+                subtitle['link'] = r['SubDownloadLink']
+                subtitle['lang'] = r['SubLanguageID']
+                subtitle['movie'] = r['MovieReleaseName']
+                subtitle['date'] = r['SubAddDate']
                 subtitles.append(subtitle)
+        lang = babelfish.Language.fromalpha2(lang).opensubtitles
+        results = [x for x in subtitles if x["lang"] == lang][:maxnumber]
         try:
             server.LogOut(token)
         except:
-            print "Logout Error"
-        lang = babelfish.Language.fromalpha2(lang).opensubtitles
-        results = [x for x in subtitles if x["lang"] == lang][:maxnumber]
+            print 'Logout Error'
+        finally:       
+            return results
+
+    def search(self, query, maxnumber, langs):
+        results = self._query(query, maxnumber, langs)
         return results
-      
