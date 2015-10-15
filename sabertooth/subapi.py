@@ -14,7 +14,14 @@ def search(provider, queryString, lang='en', maxnumber=10):
         raise ValueError('Provider Not Supported')
 
 
-def download(provider, url):
+def best_subtitle(provider, query, langs):
+    if provider in sites:
+        return sites[provider]().search(query, langs)
+    else:
+        raise ValueError('Provider Not Supported')
+
+
+def download(provider, url, dldir):
     if provider in sites:
         return sites[provider]().download(url)
     else:

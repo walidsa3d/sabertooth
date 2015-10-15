@@ -7,6 +7,7 @@ import argparse
 
 import subapi
 
+from . import __version__
 from dateutil.parser import parse
 from prettytable import PrettyTable
 from termcolor import colored
@@ -14,6 +15,7 @@ from termcolor import colored
 
 def args_parse():
     parser = argparse.ArgumentParser(usage="-h for full usage")
+    parser.add_argument('-V', '--version', action='version', version=__version__)
     parser.add_argument('query', help='search string', nargs='+')
     parser.add_argument(
         '-n', dest="maxnumber", help="maximum number of results", type=int)
@@ -48,7 +50,7 @@ def main():
         data = dict(enumerate(results, start=1))
         pretty_print(data)
         choice = raw_input("Choose subtitle to download : \t")
-        subapi().download(data[int(choice)])
+        subapi.download(data[int(choice)])
     except KeyboardInterrupt:
         print "Exiting"
         sys.exit(0)

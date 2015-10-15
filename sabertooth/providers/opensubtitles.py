@@ -6,15 +6,15 @@ import shutil
 import xmlrpclib
 
 import babelfish
+import difflib
 import requests
-
 
 class Opensubtitles(object):
 
     def __init__(self):
         self.api_url = 'http://api.opensubtitles.org/xml-rpc'
 
-    def download(self, subtitle):
+    def download(self, subtitle, dldir):
         suburl = subtitle["link"]
         videofilename = subtitle["release"]
         srtbasefilename = videofilename.rsplit(".", 1)[0]
@@ -24,12 +24,31 @@ class Opensubtitles(object):
             shutil.copyfileobj(response.raw, out_file)
         del response
         f = gzip.open(srtbasefilename+".srt.gz")
-        dump = open(srtbasefilename+".srt", "wb")
+        dump = open(dldir+srtbasefilename+".srt", "wb")
         dump.write(f.read())
         dump.close()
         f.close()
         os.remove(srtbasefilename+".srt.gz")
-        return srtbasefilename+".srt"
+        return dldir+srtbasefilename+".srt"
+
+    def compare(self, movie, sub):
+        ratio = 0
+        seq = difflib.SequenceMatcher(None, movie, sub)
+        ratio = ratio + seq.ratio()
+        return ratio
+
+    def best_subtitle(self, filename, langs):
+        subtitles = self.search_by_name(filename, langs)
+        if subtitles:
+            best_match = subtitles[0]
+            maxi = 0
+            for subtitle in subtitles:
+                ratio = self.compare(filename, subtitle['release'])
+                if ratio > maxi:
+                    maxi = ratio
+                    best_match = subtitle
+            return best_match
+        return None
 
     def _query(self, filename, maxnumber, lang, imdbID=None, moviehash=None, bytesize=None):
         search = {}

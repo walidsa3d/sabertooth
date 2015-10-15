@@ -11,7 +11,7 @@ except ImportError:
 
 setup(
     name='sabertooth',
-    version='0.3.2',
+    version='0.4.0',
     description="An OpenSubtitles Client",
     long_description=read_md('README.md'),
     author='Walid Saad',

@@ -4,6 +4,13 @@ Changelog
 %%version%% (unreleased)
 ------------------------
 
+- Smooth api. [walid]
+
+0.3.2 (2015-10-10)
+------------------
+
+- Remove unused imports. [walid]
+
 - Update readme, fix setup.py. [walid]
 
 0.3.1 (2015-10-10)
