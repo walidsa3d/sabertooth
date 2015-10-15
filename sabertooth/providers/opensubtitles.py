@@ -24,12 +24,13 @@ class Opensubtitles(object):
             shutil.copyfileobj(response.raw, out_file)
         del response
         f = gzip.open(srtbasefilename+".srt.gz")
-        dump = open(dldir+srtbasefilename+".srt", "wb")
+        extracted_file = os.path.join(dldir, srtbasefilename+".srt")
+        dump = open(extracted_file, "wb")
         dump.write(f.read())
         dump.close()
         f.close()
         os.remove(srtbasefilename+".srt.gz")
-        return dldir+srtbasefilename+".srt"
+        return extracted_file
 
     def compare(self, movie, sub):
         ratio = 0

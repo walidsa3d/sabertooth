@@ -23,6 +23,6 @@ def best_subtitle(provider, query, langs):
 
 def download(provider, url, dldir):
     if provider in sites:
-        return sites[provider]().download(url)
+        return sites[provider]().download(url, dldir)
     else:
         raise ValueError('Provider Not Supported')
