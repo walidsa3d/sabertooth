@@ -16,7 +16,7 @@ def search(provider, queryString, lang='en', maxnumber=10):
 
 def best_subtitle(provider, query, langs):
     if provider in sites:
-        return sites[provider]().search(query, langs)
+        return sites[provider]().best_subtitle(query, langs)
     else:
         raise ValueError('Provider Not Supported')
 

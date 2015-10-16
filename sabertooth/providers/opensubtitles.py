@@ -9,6 +9,7 @@ import babelfish
 import difflib
 import requests
 
+
 class Opensubtitles(object):
 
     def __init__(self):
@@ -39,7 +40,7 @@ class Opensubtitles(object):
         return ratio
 
     def best_subtitle(self, filename, langs):
-        subtitles = self.search_by_name(filename, langs)
+        subtitles = self.search(filename, 10, langs)
         if subtitles:
             best_match = subtitles[0]
             maxi = 0
@@ -51,7 +52,7 @@ class Opensubtitles(object):
             return best_match
         return None
 
-    def _query(self, filename, maxnumber, lang, imdbID=None, moviehash=None, bytesize=None):
+    def _query(self, filename, imdbID=None, moviehash=None, bytesize=None, lang=None):
         search = {}
         subtitles = []
         if moviehash:
@@ -68,7 +69,7 @@ class Opensubtitles(object):
             token = login_result['token']
         except Exception:
             print 'Login Error'
-            return subtitles
+            return []
         results = server.SearchSubtitles(token, [search])
         if results['data']:
             for r in results['data']:
@@ -80,14 +81,14 @@ class Opensubtitles(object):
                 subtitle['date'] = r['SubAddDate']
                 subtitles.append(subtitle)
         lang = babelfish.Language.fromalpha2(lang).opensubtitles
-        results = [x for x in subtitles if x["lang"] == lang][:maxnumber]
+        results = [x for x in subtitles if x['lang'] == lang]
         try:
             server.LogOut(token)
         except:
             print 'Logout Error'
-        finally:       
+        finally:
             return results
 
     def search(self, query, maxnumber, langs):
-        results = self._query(query, maxnumber, langs)
-        return results
+        results = self._query(query, lang=langs)
+        return results[:maxnumber]
