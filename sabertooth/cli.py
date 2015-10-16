@@ -9,7 +9,7 @@ import subapi
 
 import os
 
-from . import __version__
+#from . import __version__
 from dateutil.parser import parse
 from prettytable import PrettyTable
 from termcolor import colored
@@ -17,13 +17,17 @@ from termcolor import colored
 
 def args_parse():
     parser = argparse.ArgumentParser(usage="-h for full usage")
-    parser.add_argument(
-        '-V', '--version', action='version', version=__version__)
+    #parser.add_argument(
+    #    '-V', '--version', action='version', version=__version__)
     parser.add_argument('query', help='search string', nargs='+')
     parser.add_argument(
         '-n', dest="maxnumber", help="maximum number of results", type=int)
     parser.add_argument(
         '-lang', dest="language", help="language code of subtitles")
+    parser.add_argument(
+        '--subscene', action="store_true", help="search subscene")
+    parser.add_argument(
+        '--opensubtitles', action="store_true", help="search opensubtitles")
     args = parser.parse_args()
     return args
 
@@ -48,8 +52,12 @@ def main():
         query = " ".join(args.query)
         language = args.language if args.language else 'en'
         maxnumber = args.maxnumber if args.maxnumber else 10
-        results = subapi.search(
-            'opensubtitles', query, language, maxnumber)
+        if args.subscene:
+            results = subapi.search(
+                'subscene', query, language, maxnumber)
+        elif args.opensubtitles:
+            results = subapi.search(
+                'opensubtitles', query, language, maxnumber)
         data = dict(enumerate(results, start=1))
         pretty_print(data)
         choice = raw_input("Choose subtitle to download : \t")

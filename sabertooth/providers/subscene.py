@@ -8,19 +8,24 @@ import requests
 
 import cStringIO
 
+import babelfish
+
+from datetime import datetime
+
 from bs4 import BeautifulSoup as BS
+from urlparse import urljoin
 
 
 class Subscene(object):
 
     def __init__(self):
         self.base_url = 'http://subscene.com'
-        self.language = 'english'
         self.headers = {}
 
-    def search(self, release_name):
+    def search(self, release_name, maxnumber, lang):
         """search subtitles from subscene.com"""
         subtitles = []
+        language = babelfish.Language.fromalpha2(lang).name
         payload = {'q': release_name, 'r': 'true'}
         url = 'http://subscene.com/subtitles/release'
         response = requests.get(url, params=payload, headers=self.headers).text
@@ -31,10 +36,15 @@ class Subscene(object):
             suburl = node.parent['href']
             quality = node['class'][2].split('-')[0]
             name = node.parent.findChildren()[1].text.strip()
-            if self.language in suburl and 'trailer' not in name.lower():
-                subtitles.append(
-                    {'url': self.base_url+suburl, 'name': name, 'quality': quality})
-        return subtitles
+            if language.lower() in suburl and 'trailer' not in name.lower():
+                subtitle = {}
+                subtitle['release'] = name
+                subtitle['link'] = urljoin(self.base_url, suburl)
+                subtitle['lang'] = lang
+                subtitle['movie'] = name+quality
+                subtitle['date'] = '10/10/2010'
+                subtitles.append(subtitle)
+        return subtitles[:maxnumber]
 
     def download(self, sub_url):
         """download and unzip subtitle archive to a temp location"""
