@@ -7,9 +7,10 @@ sites = {'opensubtitles': Opensubtitles,
          'subscene': Subscene}
 
 
-def search(provider, queryString, lang='en', maxnumber=10):
+def search(provider, query, lang='en', maxnumber=10):
     if provider in sites:
-        return sites[provider]().search(queryString, maxnumber, lang)
+        results = sites[provider]().search(query, lang)[:maxnumber]
+        return results
     else:
         raise ValueError('Provider Not Supported')
 

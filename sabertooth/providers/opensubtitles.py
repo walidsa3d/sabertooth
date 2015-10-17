@@ -89,6 +89,6 @@ class Opensubtitles(object):
         finally:
             return results
 
-    def search(self, query, maxnumber, langs):
+    def search(self, query, langs):
         results = self._query(query, lang=langs)
-        return results[:maxnumber]
+        return results

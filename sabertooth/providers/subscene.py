@@ -22,7 +22,7 @@ class Subscene(object):
         self.base_url = 'http://subscene.com'
         self.headers = {}
 
-    def search(self, release_name, maxnumber, lang):
+    def search(self, release_name, lang):
         """search subtitles from subscene.com"""
         subtitles = []
         language = babelfish.Language.fromalpha2(lang).name
@@ -44,7 +44,7 @@ class Subscene(object):
                 subtitle['movie'] = name+quality
                 subtitle['date'] = '10/10/2010'
                 subtitles.append(subtitle)
-        return subtitles[:maxnumber]
+        return subtitles
 
     def download(self, sub_url):
         """download and unzip subtitle archive to a temp location"""
